@@ -1,5 +1,6 @@
 // @flow
 import { type Action, type CrewMember } from './types';
+import { rollD6 } from './util';
 
 const ROLL_CALL = '[Crew] Roll Call';
 
@@ -30,8 +31,11 @@ export default function reducer(
   }
 }
 
-function rollCrewMember(member) {
-  return { ...member, value: 1 };
+function rollCrewMember(member: CrewMember): CrewMember {
+  if (!member.sickbay && !member.deployed && !member.locked) {
+    return { ...member, value: rollD6() };
+  }
+  return { ...member };
 }
 
 export function rollCall(): Action {
