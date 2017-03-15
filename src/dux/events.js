@@ -6,12 +6,14 @@ type EventState = {
   deck: Array<EventCard>,
   drawnEvents: Array<EventCard>,
   activeEvents: Array<EventCard>,
+  discardedEvents: Array<EventCard>,
 };
 
 export const initialState: EventState = {
   deck: clone(cards),
   drawnEvents: [],
   activeEvents: [],
+  discardedEvents: [],
 };
 
 export default function reducer(state: EventState = initialState, action: Action): EventState {
@@ -25,15 +27,20 @@ export default function reducer(state: EventState = initialState, action: Action
       return { ...state, deck, drawnEvents };
     }
     case ADD_ACTIVE_EVENTS: {
-      let activeEvents;
       const overage = state.activeEvents.length + action.payload.length - 9;
       if (overage > 0) {
-        const trimmed = discardRandomEvents(state.activeEvents, overage);
-        activeEvents = [...trimmed, ...action.payload];
+        const { events, discarded } = discardRandomEvents(state.activeEvents, overage);
+        const activeEvents = [...events, ...action.payload];
+        const discardedEvents = [...state.discardedEvents, ...discarded];
+        return { ...state, activeEvents, discardedEvents };
       } else {
-        activeEvents = [...state.activeEvents, ...action.payload];
+        const activeEvents = [...state.activeEvents, ...action.payload];
+        return { ...state, activeEvents };
       }
-      return { ...state, activeEvents };
+    }
+    case DISCARD_EVENTS: {
+      const discardedEvents = [...state.discardedEvents, ...action.payload];
+      return { ...state, discardedEvents };
     }
     default: {
       return state;
@@ -43,16 +50,19 @@ export default function reducer(state: EventState = initialState, action: Action
 
 const discardRandomEvents = (events: Array<EventCard>, count: number): Array<EventCard> => {
   let newEvents = clone(events);
+  let discarded = [];
   for (let i = 0; i < count; i++) {
     const randomIndex = Math.floor(Math.random() * (9 - i));
+    discarded.push(newEvents[randomIndex]);
     newEvents = [...newEvents.slice(0, randomIndex), ...newEvents.slice(randomIndex + 1)];
   }
-  return newEvents;
+  return { events: newEvents, discarded };
 };
 
 const SHUFFLE_DECK = '[Events] Shuffle Deck';
 const DRAW_EVENT = '[Events] Draw Event';
 const ADD_ACTIVE_EVENTS = '[Events] Add Active Events';
+const DISCARD_EVENTS = '[Events] Discard Events';
 
 export function shuffleDeck(): Action {
   return { type: SHUFFLE_DECK, payload: null };
@@ -64,4 +74,8 @@ export function drawEvent(numberToDraw: number): Action {
 
 export function addActiveEvents(events: Array<EventCard>): Action {
   return { type: ADD_ACTIVE_EVENTS, payload: events };
+}
+
+export function discardEvents(events: Array<EventCards>): Action {
+  return { type: DISCARD_EVENTS, payload: events };
 }

@@ -35,5 +35,11 @@ describe('Events Reducer', () => {
     expect(result.activeEvents).toContainEqual({ id: 1 });
     expect(result.activeEvents).toContainEqual({ id: 2 });
     expect(result.activeEvents).toHaveLength(9);
+    expect(result.discardedEvents).toHaveLength(2);
+  });
+
+  it('can add an event to the discard pile', () => {
+    const result = reducer(state, inc.discardEvents([state.deck[0]]));
+    expect(result.discardedEvents).toHaveLength(1);
   });
 });
