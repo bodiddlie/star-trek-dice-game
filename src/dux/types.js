@@ -22,9 +22,16 @@ export type EventCard = {
   id: number,
   title: string,
   persistent: boolean,
+  actions: Array<MissionAction>,
 };
 
 export type DevelopmentCard = {
   id: number,
   title: string,
+};
+
+export type MissionAction = {
+  id: number,
+  text: string,
+  actionFunc: Function,
 };

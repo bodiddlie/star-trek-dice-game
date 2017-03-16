@@ -38,32 +38,37 @@ export default function reducer(state: EventState = initialState, action: Action
     case CLEAR_DRAWN_EVENT: {
       return { ...state, drawnEvent: null };
     }
-    // case DISCARD_ACTIVE_EVENT: {
-    //   const index = state.activeEvents.indexOf(action.payload);
-    //   if (index < 0) return state;
-    //   const discardedEvents = [...state.discardedEvents, state.activeEvents[index]];
-    //   const activeEvents = [...state.activeEvents.slice(0, index), ...state.activeEvents.slice(index + 1)];
-    //   return { ...state, activeEvents, discardedEvents };
-    // }
+    case REMOVE_ACTIVE_EVENT: {
+      const activeEvents = state.activeEvents.filter(e => e.id !== action.payload.id);
+      return { ...state, activeEvents };
+    }
+    case REMOVE_EVENT_FROM_DECK: {
+      const deck = state.deck.filter(e => e.id !== action.payload.id);
+      return { ...state, deck };
+    }
     default: {
       return state;
     }
   }
 }
 
-// type DiscardReturn = { events: Array<EventCard>, discarded: EventCard };
-// const discardRandomEvent = (events: Array<EventCard>): DiscardReturn => {
-//   const randomIndex = Math.floor(Math.random() * 9);
-//   const discarded = events[randomIndex];
-//   const newEvents = [...events.slice(0, randomIndex), ...events.slice(randomIndex + 1)];
-//   return { events: newEvents, discarded };
-// };
-
 const SHUFFLE_DECK = '[Events] Shuffle Deck';
 const DRAW_EVENT = '[Events] Draw Event';
 const ACTIVATE_EVENT = '[Events] Activate Event';
 const DISCARD_EVENT = '[Events] Discard Event';
+const REMOVE_ACTIVE_EVENT = '[Events] Remove Active Event';
 const CLEAR_DRAWN_EVENT = '[Events] Clear Drawn Event';
+const REMOVE_EVENT_FROM_DECK = '[Events] Remove Event From Deck';
+
+export const actionTypes = {
+  SHUFFLE_DECK,
+  DRAW_EVENT,
+  ACTIVATE_EVENT,
+  DISCARD_EVENT,
+  REMOVE_ACTIVE_EVENT,
+  CLEAR_DRAWN_EVENT,
+  REMOVE_EVENT_FROM_DECK,
+};
 
 export function shuffleDeck(): Action {
   return { type: SHUFFLE_DECK, payload: null };
@@ -83,4 +88,12 @@ export function discardEvent(event: EventCard): Action {
 
 export function clearDrawnEvent(): Action {
   return { type: CLEAR_DRAWN_EVENT, payload: null };
+}
+
+export function removeActiveEvent(event: EventCard): Action {
+  return { type: REMOVE_ACTIVE_EVENT, payload: event };
+}
+
+export function removeEventFromDeck(event: EventCard): Action {
+  return { type: REMOVE_EVENT_FROM_DECK, payload: event };
 }
