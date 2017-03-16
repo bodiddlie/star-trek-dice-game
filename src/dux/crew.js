@@ -14,13 +14,10 @@ export const initialState = [
   { id: 7, value: 0, deployed: false, sickbay: false, locked: false },
   { id: 8, value: 0, deployed: false, sickbay: false, locked: false },
   { id: 9, value: 0, deployed: false, sickbay: false, locked: false },
-  { id: 10, value: 0, deployed: false, sickbay: false, locked: false }
+  { id: 10, value: 0, deployed: false, sickbay: false, locked: false },
 ];
 
-export default function reducer(
-  state: Array<CrewMember>,
-  action: Action
-): Array<CrewMember> {
+export default function reducer(state: Array<CrewMember>, action: Action): Array<CrewMember> {
   switch (action.type) {
     case ROLL_CALL: {
       return state.map(rollCrewMember);

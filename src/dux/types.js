@@ -16,18 +16,15 @@ export type CrewMember = {
 export type MissionCard = {
   id: number,
   title: string,
-  MAction: string,
-  Steps: Array<MissionStep>,
-};
-
-export type MissionStep = {
-  level: number,
-  action: string,
-  requirement: string,
 };
 
 export type EventCard = {
   id: number,
   title: string,
   persistent: boolean,
+};
+
+export type DevelopmentCard = {
+  id: number,
+  title: string,
 };

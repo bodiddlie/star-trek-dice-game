@@ -1,4 +1,4 @@
-import reducer, {takeDamage, raiseShields, lowerShields} from '../shields';
+import reducer, { takeDamage, raiseShields, lowerShields } from '../shields';
 
 describe('Shield Reducer', () => {
   it('has an initial value of 0', () => {
@@ -16,9 +16,9 @@ describe('Shield Reducer', () => {
     expect(result).toBe(3);
   });
 
-  it('can return a negative amount', () => {
-    const result = reducer(5, takeDamage(10));
-    expect(result).toBe(-5);
+  it('can not go below 0', () => {
+    const result = reducer(1, takeDamage(2));
+    expect(result).toBe(0);
   });
 
   it('can raise the shields', () => {

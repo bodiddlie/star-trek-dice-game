@@ -20,6 +20,7 @@ export const initialState: MissionState = {
   activeMission: null,
   failedMissions: [],
   completedMissions: [],
+  drawnMission: null,
 };
 
 export default function reducer(state: MissionState = initialState, action: Action): MissionState {

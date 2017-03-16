@@ -1,4 +1,4 @@
-import reducer, { takeDamage, repairDamage, resetNegativeHull } from '../hull';
+import reducer, { takeDamage, repairDamage } from '../hull';
 
 describe('Hull Reducer', () => {
   it('has an initial value of 10', () => {
@@ -16,9 +16,9 @@ describe('Hull Reducer', () => {
     expect(result).toBe(8);
   });
 
-  it('can return a negative amount', () => {
+  it('can not go below 0', () => {
     const result = reducer(10, takeDamage(12));
-    expect(result).toBe(-2);
+    expect(result).toBe(0);
   });
 
   it('can repair damage to the hull', () => {
@@ -31,18 +31,8 @@ describe('Hull Reducer', () => {
     expect(result).toBe(4);
   });
 
-  it('can not repair past 10', () => {
-    const result = reducer(8, repairDamage(3));
-    expect(result).toBe(10);
-  });
-
-  it('can reset negative hull to 0', () => {
-    const result = reducer(-2, resetNegativeHull());
-    expect(result).toBe(0);
-  });
-
-  it('can not reset a positive hull value', () => {
-    const result = reducer(2, resetNegativeHull());
-    expect(result).toBe(2);
+  it('can not repair past 7', () => {
+    const result = reducer(6, repairDamage(3));
+    expect(result).toBe(7);
   });
 });
