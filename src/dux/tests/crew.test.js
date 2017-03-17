@@ -40,4 +40,14 @@ describe('Crew Reducer', () => {
     const result: CrewState = reducer(state, inc.takeDamage(1));
     expect(result.remainingDamage).toBe(1);
   });
+
+  it('can move a random dice from quarters to sickbay', () => {
+    const result: CrewState = reducer(state, inc.moveRandomCrewFromQuartersToSickbay());
+    expect(result.crew.filter(c => c.sickbay)).toHaveLength(1);
+  });
+
+  it('can log that an active crew dice needs to be moved to sickbay', () => {
+    const result: CrewState = reducer(state, inc.requireActiveDiceToSickbay());
+    expect(result.requiredToSickbayRemaining).toEqual(1);
+  });
 });

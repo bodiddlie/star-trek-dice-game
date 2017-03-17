@@ -1,5 +1,9 @@
 // @flow
 
+export type Dispatch = (action: Action | ThunkAction) => any;
+export type GetState = () => Object;
+export type ThunkAction = (dispatch: Dispatch, getStat: GetState) => any;
+
 export type Action = {
   type: string,
   payload: any,
@@ -16,6 +20,11 @@ export type CrewMember = {
 export type MissionCard = {
   id: number,
   title: string,
+  currentStage: number,
+};
+
+export type EventCrewSlot = {
+  id: number,
 };
 
 export type EventCard = {
@@ -23,6 +32,7 @@ export type EventCard = {
   title: string,
   persistent: boolean,
   actions: Array<MissionAction>,
+  crewSlots: Array<EventCrewSlot>,
 };
 
 export type DevelopmentCard = {

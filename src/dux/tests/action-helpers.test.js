@@ -95,4 +95,20 @@ describe('Action Helpers', () => {
       expect(actions[2]).toEqual(fromCrew.takeDamage(2));
     });
   });
+
+  describe('dealHullDamage', () => {
+    it('will deal damage to the hull bypassing the shields', () => {
+      initialState.shields = 5;
+      store.dispatch(helpers.dealHullDamage(1));
+      const actions = store.getActions();
+      expect(actions[0]).toEqual(fromHull.takeDamage(1));
+    });
+
+    it('will deal damage to crew past hull', () => {
+      initialState.hull = 0;
+      store.dispatch(helpers.dealHullDamage(1));
+      const actions = store.getActions();
+      expect(actions[0]).toEqual(fromCrew.takeDamage(1));
+    });
+  });
 });

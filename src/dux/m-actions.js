@@ -1,7 +1,8 @@
 import { type MissionAction } from './types';
 import { drawEvent, removeEventFromDeck } from './events';
 import { repairDamage } from './hull';
-import { activateAndDiscardEvent } from './action-helpers';
+import { moveRandomCrewFromQuartersToSickbay, requireActiveDiceToSickbay } from './crew';
+import { activateAndDiscardEvent, dealDamage, dealHullDamage } from './action-helpers';
 
 const DrawEvent: MissionAction = {
   id: 1,
@@ -51,5 +52,65 @@ export function drawTwoEvents() {
 export function gainOneHull() {
   return dispatch => {
     dispatch(repairDamage(1));
+  };
+}
+
+export function dealOneDamage() {
+  return dispatch => {
+    dispatch(dealDamage(1));
+  };
+}
+
+export function dealTwoDamage() {
+  return dispatch => {
+    dispatch(dealDamage(2));
+  };
+}
+
+export function investigateSpatialAnomaly() {
+  return (dispatch, getState) => {
+    if (getState().missions.activeMission.currentStage > 1) {
+      dispatch(drawEventAction());
+    } else {
+      dispatch(dealTwoDamage());
+    }
+  };
+}
+
+export function emptySickbayMove() {
+  return (dispatch, getState) => {
+    if (getState().crew.crew.filter(c => c.sickbay).length === 0) {
+      dispatch(moveRandomCrewFromQuartersToSickbay());
+    }
+  };
+}
+
+export function dealOneHullDamage() {
+  return dispatch => {
+    dispatch(dealHullDamage(1));
+  };
+}
+
+export function dealTwoHullDamage() {
+  return dispatch => {
+    dispatch(dealHullDamage(2));
+  };
+}
+
+export function oneActiveCrewToSickbay() {
+  return dispatch => {
+    dispatch(requireActiveDiceToSickbay());
+  };
+}
+
+export function alienEntity() {
+  return (dispatch, getState) => {
+    const card = getState().events.activeEvents.find(e => e.title === 'Alien Entity');
+    if (!card) return;
+
+    const damage = card.crewSlots.filter(s => s.id > 0).length;
+    if (damage) {
+      dispatch(dealDamage(damage));
+    }
   };
 }

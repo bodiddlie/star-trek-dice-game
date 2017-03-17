@@ -1,11 +1,9 @@
 // @flow
 import { type Action } from './types';
 
-const TAKE_DAMAGE = '[Shields] Take Damage';
-const RAISE_SHEILDS = '[Shields] Raise Shields';
-const LOWER_SHIELDS = '[Shields] Lower Shields';
+export const initialState: number = 0;
 
-export default function reducer(state: number = 0, action: Action): number {
+export default function reducer(state: number = initialState, action: Action): number {
   switch (action.type) {
     case TAKE_DAMAGE: {
       return Math.max(0, state - action.payload);
@@ -21,6 +19,10 @@ export default function reducer(state: number = 0, action: Action): number {
     }
   }
 }
+
+const TAKE_DAMAGE = '[Shields] Take Damage';
+const RAISE_SHEILDS = '[Shields] Raise Shields';
+const LOWER_SHIELDS = '[Shields] Lower Shields';
 
 export function takeDamage(amount: number): Action {
   return { type: TAKE_DAMAGE, payload: amount };

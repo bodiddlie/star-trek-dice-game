@@ -3,7 +3,7 @@ import reducer, { takeDamage, repairDamage } from '../hull';
 describe('Hull Reducer', () => {
   it('has an initial value of 10', () => {
     const result = reducer(undefined, {});
-    expect(result).toBe(10);
+    expect(result).toBe(7);
   });
 
   it('can apply damage to the hull', () => {

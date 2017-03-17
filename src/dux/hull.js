@@ -1,7 +1,9 @@
 // @flow
 import { type Action } from './types';
 
-export default function reducer(state: number = 10, action: Action): number {
+export const initialState: number = 7;
+
+export default function reducer(state: number = initialState, action: Action): number {
   switch (action.type) {
     case TAKE_DAMAGE: {
       return Math.max(0, state - action.payload);
