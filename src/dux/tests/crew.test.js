@@ -50,4 +50,9 @@ describe('Crew Reducer', () => {
     const result: CrewState = reducer(state, inc.requireActiveDiceToSickbay());
     expect(result.requiredToSickbayRemaining).toEqual(1);
   });
+
+  it('can log that an active crew dice needs to be moved to quarters', () => {
+    const result: CrewState = reducer(state, inc.requireActiveToQuarters());
+    expect(result.requiredToQuartersRemaining).toEqual(1);
+  });
 });

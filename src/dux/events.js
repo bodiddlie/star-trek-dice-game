@@ -3,7 +3,7 @@ import { type Action, type EventCard } from './types';
 import { cards } from './event-deck';
 import { clone, shuffle } from './util';
 
-type EventState = {
+export type EventState = {
   deck: Array<EventCard>,
   drawnEvent: ?EventCard,
   activeEvents: Array<EventCard>,

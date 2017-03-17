@@ -8,7 +8,7 @@ const DRAW_MISSION_CARD = '[Mission] Draw Mission Card';
 const FAIL_MISSION = '[Mission] Fail Mission';
 const COMPLETE_MISSION = '[Mission] Complete Mission';
 
-type MissionState = {
+export type MissionState = {
   deck: Array<MissionCard>,
   activeMission: ?MissionCard,
   failedMissions: Array<MissionCard>,

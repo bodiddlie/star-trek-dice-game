@@ -17,12 +17,12 @@ describe('Dilithium Crystals Reducer', () => {
   });
 
   it('can add a crystal', () => {
-    const result = reducer(5, addCrystal());
+    const result = reducer(5, addCrystal(1));
     expect(result).toBe(6);
   });
 
   it('can not add past 10', () => {
-    const result = reducer(10, addCrystal());
+    const result = reducer(1, addCrystal(10));
     expect(result).toBe(10);
   });
 });

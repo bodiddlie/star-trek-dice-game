@@ -12,7 +12,7 @@ export default function reducer(state: number = initialState, action: Action): n
       return 10;
     }
     case ADD_CRYSTAL: {
-      return Math.min(10, state + 1);
+      return Math.min(10, state + action.payload);
     }
     default: {
       return state;
@@ -32,6 +32,6 @@ export function resetCrystals(): Action {
   return { type: RESET_CRYSTALS, payload: null };
 }
 
-export function addCrystal(): Action {
-  return { type: ADD_CRYSTAL, payload: null };
+export function addCrystal(amount: number): Action {
+  return { type: ADD_CRYSTAL, payload: amount };
 }

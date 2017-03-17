@@ -3,7 +3,7 @@ import { type Action, type DevelopmentCard } from './types';
 import { cards } from './development-deck';
 import { clone, shuffle } from './util';
 
-type DevelopmentState = {
+export type DevelopmentState = {
   deck: Array<DevelopmentCard>,
   drawnDevelopment: ?DevelopmentCard,
   availableDevelopments: Array<DevelopmentCard>,
