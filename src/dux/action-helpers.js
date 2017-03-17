@@ -1,6 +1,7 @@
 import { activateEvent, removeActiveEvent, discardEvent } from './events';
 import * as hull from './hull';
 import * as shields from './shields';
+import * as crew from './crew';
 
 export function activateAndDiscardEvent(event) {
   return (dispatch, getState) => {
@@ -31,7 +32,16 @@ export function dealDamage(amount) {
     }
 
     if (remaining) {
-      dispatch(hull.takeDamage(remaining));
+      const hullLeft = getState().hull;
+      if (hullLeft) {
+        const hullDamage = remaining > hullLeft ? hullLeft : remaining;
+        remaining -= hullDamage;
+        dispatch(hull.takeDamage(hullDamage));
+      }
+    }
+
+    if (remaining) {
+      dispatch(crew.takeDamage(remaining));
     }
   };
 }

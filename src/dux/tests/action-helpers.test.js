@@ -7,6 +7,7 @@ import * as eventDeck from '../event-deck';
 import * as missionDeck from '../mission-deck';
 import * as fromHull from '../hull';
 import * as fromShields from '../shields';
+import * as fromCrew from '../crew';
 import { clone } from '../util';
 
 const middlewares = [thunk];
@@ -16,6 +17,8 @@ const baseState = {
   missions: { activeMission: null, deck: clone(missionDeck.cards) },
   crystals: 10,
   events: { activeEvents: [], deck: clone(eventDeck.cards), drawnEvent: null, discardedEvents: [] },
+  shields: 0,
+  hull: 7,
 };
 
 describe('Action Helpers', () => {
@@ -76,6 +79,20 @@ describe('Action Helpers', () => {
       expect(actions[1]).toEqual(fromHull.takeDamage(2));
     });
 
-    xit('damage past shields and hull is stored for later', () => {});
+    it('damage past shields and hull is stored for later', () => {
+      initialState.hull = 0;
+      store.dispatch(helpers.dealDamage(1));
+      const actions = store.getActions();
+      expect(actions[0]).toEqual(fromCrew.takeDamage(1));
+    });
+
+    it('damages shield, hull, then crew in that order', () => {
+      initialState.shields = 5;
+      store.dispatch(helpers.dealDamage(14));
+      const actions = store.getActions();
+      expect(actions[0]).toEqual(fromShields.takeDamage(5));
+      expect(actions[1]).toEqual(fromHull.takeDamage(7));
+      expect(actions[2]).toEqual(fromCrew.takeDamage(2));
+    });
   });
 });
