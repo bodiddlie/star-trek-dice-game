@@ -15,7 +15,7 @@ class Game extends React.Component {
   };
   render() {
     const { showStartModal } = this.state;
-    const { events } = this.props;
+    const { events, missions, developments } = this.props;
 
     return (
       <Container>
@@ -24,6 +24,12 @@ class Game extends React.Component {
           <DeckGrid>
             <Deck>
               {events.map(e => <span key={e.id}>{e.title}</span>)}
+            </Deck>
+            <Deck>
+              {missions.map(m => <span key={m.id}>{m.title}</span>)}
+            </Deck>
+            <Deck>
+              {developments.map(d => <span key={d.id}>{d.title}</span>)}
             </Deck>
           </DeckGrid>}
         <Modal show={showStartModal}>
@@ -51,7 +57,7 @@ const mapStateToProps = state => {
   return {
     events: state.events.deck,
     developments: state.developments.deck,
-    mission: state.missions.deck,
+    missions: state.missions.deck,
   };
 };
 
