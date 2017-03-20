@@ -3,6 +3,52 @@ import { type Action, type EventCard } from './types';
 import { cards } from './event-deck';
 import { clone, shuffle } from './util';
 
+const SHUFFLE_DECK = '[Events] Shuffle Deck';
+const DRAW_EVENT = '[Events] Draw Event';
+const ACTIVATE_EVENT = '[Events] Activate Event';
+const DISCARD_EVENT = '[Events] Discard Event';
+const REMOVE_ACTIVE_EVENT = '[Events] Remove Active Event';
+const CLEAR_DRAWN_EVENT = '[Events] Clear Drawn Event';
+const REMOVE_EVENT_FROM_DECK = '[Events] Remove Event From Deck';
+
+export const actionTypes = {
+  SHUFFLE_DECK,
+  DRAW_EVENT,
+  ACTIVATE_EVENT,
+  DISCARD_EVENT,
+  REMOVE_ACTIVE_EVENT,
+  CLEAR_DRAWN_EVENT,
+  REMOVE_EVENT_FROM_DECK,
+};
+
+export function shuffleDeck(): Action {
+  return { type: SHUFFLE_DECK, payload: null };
+}
+
+export function drawEvent(): Action {
+  return { type: DRAW_EVENT, payload: null };
+}
+
+export function activateEvent(event: EventCard): Action {
+  return { type: ACTIVATE_EVENT, payload: event };
+}
+
+export function discardEvent(event: EventCard): Action {
+  return { type: DISCARD_EVENT, payload: event };
+}
+
+export function clearDrawnEvent(): Action {
+  return { type: CLEAR_DRAWN_EVENT, payload: null };
+}
+
+export function removeActiveEvent(event: EventCard): Action {
+  return { type: REMOVE_ACTIVE_EVENT, payload: event };
+}
+
+export function removeEventFromDeck(event: EventCard): Action {
+  return { type: REMOVE_EVENT_FROM_DECK, payload: event };
+}
+
 export type EventState = {
   deck: Array<EventCard>,
   drawnEvent: ?EventCard,
@@ -50,50 +96,4 @@ export default function reducer(state: EventState = initialState, action: Action
       return state;
     }
   }
-}
-
-const SHUFFLE_DECK = '[Events] Shuffle Deck';
-const DRAW_EVENT = '[Events] Draw Event';
-const ACTIVATE_EVENT = '[Events] Activate Event';
-const DISCARD_EVENT = '[Events] Discard Event';
-const REMOVE_ACTIVE_EVENT = '[Events] Remove Active Event';
-const CLEAR_DRAWN_EVENT = '[Events] Clear Drawn Event';
-const REMOVE_EVENT_FROM_DECK = '[Events] Remove Event From Deck';
-
-export const actionTypes = {
-  SHUFFLE_DECK,
-  DRAW_EVENT,
-  ACTIVATE_EVENT,
-  DISCARD_EVENT,
-  REMOVE_ACTIVE_EVENT,
-  CLEAR_DRAWN_EVENT,
-  REMOVE_EVENT_FROM_DECK,
-};
-
-export function shuffleDeck(): Action {
-  return { type: SHUFFLE_DECK, payload: null };
-}
-
-export function drawEvent(): Action {
-  return { type: DRAW_EVENT, payload: null };
-}
-
-export function activateEvent(event: EventCard): Action {
-  return { type: ACTIVATE_EVENT, payload: event };
-}
-
-export function discardEvent(event: EventCard): Action {
-  return { type: DISCARD_EVENT, payload: event };
-}
-
-export function clearDrawnEvent(): Action {
-  return { type: CLEAR_DRAWN_EVENT, payload: null };
-}
-
-export function removeActiveEvent(event: EventCard): Action {
-  return { type: REMOVE_ACTIVE_EVENT, payload: event };
-}
-
-export function removeEventFromDeck(event: EventCard): Action {
-  return { type: REMOVE_EVENT_FROM_DECK, payload: event };
 }
