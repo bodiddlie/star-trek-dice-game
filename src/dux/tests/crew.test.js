@@ -55,4 +55,9 @@ describe('Crew Reducer', () => {
     const result: CrewState = reducer(state, inc.requireActiveToQuarters());
     expect(result.requiredToQuartersRemaining).toEqual(1);
   });
+
+  it('can log that 2 crew need to be changed to SEC', () => {
+    const result: CrewState = reducer(state, inc.requireTwoCrewToSec());
+    expect(result.crewToSecRemaining).toEqual(2);
+  });
 });

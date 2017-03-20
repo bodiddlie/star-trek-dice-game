@@ -93,4 +93,25 @@ describe('Instant Action Thunks', () => {
       expect(actions[0]).toEqual(fromCrystals.addCrystal(2));
     });
   });
+
+  //TODO: Add 2 Eng to one challenge - should this be an instant actions?
+
+  //TODO: Add 2 Med to one challenge
+
+  //TODO: Add 2 Com to one challenge
+
+  //TODO: Add 2 Sci to one challenge
+
+  //TODO: Add 2 Sec to one challenge
+
+  //TODO: Sensor Probe: re-order the top 5 event cards
+
+  describe('Red Alert', () => {
+    it('raises shields and marks as two dice need to be changed to SEC', () => {
+      store.dispatch(iact.redAlert());
+      const actions = store.getActions();
+      expect(actions[0]).toEqual(fromShields.raiseShields());
+      expect(actions[1]).toEqual(fromCrew.requireTwoCrewToSec());
+    });
+  });
 });

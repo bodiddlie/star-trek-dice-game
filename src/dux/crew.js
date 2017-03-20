@@ -7,6 +7,7 @@ export type CrewState = {
   remainingDamage: number,
   requiredToSickbayRemaining: number,
   requiredToQuartersRemaining: number,
+  crewToSecRemaining: number,
 };
 
 export const initialState: CrewState = {
@@ -25,6 +26,7 @@ export const initialState: CrewState = {
   remainingDamage: 0,
   requiredToSickbayRemaining: 0,
   requiredToQuartersRemaining: 0,
+  crewToSecRemaining: 0,
 };
 
 export default function reducer(state: CrewState, action: Action): CrewState {
@@ -55,6 +57,10 @@ export default function reducer(state: CrewState, action: Action): CrewState {
       const requiredToQuartersRemaining = state.requiredToQuartersRemaining + 1;
       return { ...state, requiredToQuartersRemaining };
     }
+    case REQUIRE_TWO_CREW_TO_SEC: {
+      const crewToSecRemaining = state.crewToSecRemaining + 2;
+      return { ...state, crewToSecRemaining };
+    }
     default: {
       return state;
     }
@@ -73,6 +79,7 @@ const TAKE_DAMAGE = '[Crew] Take Damage';
 const MOVE_RANDOM_CREW_FROM_QUARTERS_TO_SICKBAY = '[Crew] Move Random Crew From Quaters To Sickbay';
 const REQUIRE_ACTIVE_DICE_TO_SICKBAY = '[Crew] Require Active Dice to Sickbay';
 const REQUIRE_ACTIVE_TO_QUARTERS = '[Crew] Require Active To Quarters';
+const REQUIRE_TWO_CREW_TO_SEC = '[Crew] Require Two Crew To Sec';
 
 export function rollCall(): Action {
   return { type: ROLL_CALL, payload: null };
@@ -92,4 +99,8 @@ export function requireActiveDiceToSickbay(): Action {
 
 export function requireActiveToQuarters(): Action {
   return { type: REQUIRE_ACTIVE_TO_QUARTERS, payload: null };
+}
+
+export function requireTwoCrewToSec(): Action {
+  return { type: REQUIRE_TWO_CREW_TO_SEC, payload: null };
 }

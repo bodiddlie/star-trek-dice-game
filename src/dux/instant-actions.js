@@ -1,7 +1,7 @@
 // @flow
 import { type ThunkAction, type Dispatch, type GetState } from './types';
-import { requireActiveDiceToSickbay, requireActiveToQuarters, moveRandomCrewFromQuartersToSickbay } from './crew';
-import { lowerShields } from './shields';
+import { requireActiveDiceToSickbay, requireActiveToQuarters, moveRandomCrewFromQuartersToSickbay, requireTwoCrewToSec } from './crew';
+import { lowerShields, raiseShields } from './shields';
 import { addCrystal } from './crystals';
 import { dealDamage } from './action-helpers';
 
@@ -40,5 +40,12 @@ export function dilithiumDeposits(amount: number): () => ThunkAction {
     return (dispatch: Dispatch) => {
       dispatch(addCrystal(amount));
     };
+  };
+}
+
+export function redAlert(): ThunkAction {
+  return (dispatch: Dispatch) => {
+    dispatch(raiseShields());
+    dispatch(requireTwoCrewToSec());
   };
 }
