@@ -2,6 +2,37 @@
 import { type Action, type CrewMember } from './types';
 import { rollD6 } from './util';
 
+const ROLL_CALL = '[Crew] Roll Call';
+const TAKE_DAMAGE = '[Crew] Take Damage';
+const MOVE_RANDOM_CREW_FROM_QUARTERS_TO_SICKBAY = '[Crew] Move Random Crew From Quaters To Sickbay';
+const REQUIRE_ACTIVE_DICE_TO_SICKBAY = '[Crew] Require Active Dice to Sickbay';
+const REQUIRE_ACTIVE_TO_QUARTERS = '[Crew] Require Active To Quarters';
+const REQUIRE_TWO_CREW_TO_SEC = '[Crew] Require Two Crew To Sec';
+
+export function rollCall(): Action {
+  return { type: ROLL_CALL, payload: null };
+}
+
+export function takeDamage(amount: number): Action {
+  return { type: TAKE_DAMAGE, payload: amount };
+}
+
+export function moveRandomCrewFromQuartersToSickbay(): Action {
+  return { type: MOVE_RANDOM_CREW_FROM_QUARTERS_TO_SICKBAY, payload: null };
+}
+
+export function requireActiveDiceToSickbay(): Action {
+  return { type: REQUIRE_ACTIVE_DICE_TO_SICKBAY, payload: null };
+}
+
+export function requireActiveToQuarters(): Action {
+  return { type: REQUIRE_ACTIVE_TO_QUARTERS, payload: null };
+}
+
+export function requireTwoCrewToSec(): Action {
+  return { type: REQUIRE_TWO_CREW_TO_SEC, payload: null };
+}
+
 export type CrewState = {
   crew: Array<CrewMember>,
   remainingDamage: number,
@@ -72,35 +103,4 @@ function rollCrewMember(member: CrewMember): CrewMember {
     return { ...member, value: rollD6() };
   }
   return { ...member };
-}
-
-const ROLL_CALL = '[Crew] Roll Call';
-const TAKE_DAMAGE = '[Crew] Take Damage';
-const MOVE_RANDOM_CREW_FROM_QUARTERS_TO_SICKBAY = '[Crew] Move Random Crew From Quaters To Sickbay';
-const REQUIRE_ACTIVE_DICE_TO_SICKBAY = '[Crew] Require Active Dice to Sickbay';
-const REQUIRE_ACTIVE_TO_QUARTERS = '[Crew] Require Active To Quarters';
-const REQUIRE_TWO_CREW_TO_SEC = '[Crew] Require Two Crew To Sec';
-
-export function rollCall(): Action {
-  return { type: ROLL_CALL, payload: null };
-}
-
-export function takeDamage(amount: number): Action {
-  return { type: TAKE_DAMAGE, payload: amount };
-}
-
-export function moveRandomCrewFromQuartersToSickbay(): Action {
-  return { type: MOVE_RANDOM_CREW_FROM_QUARTERS_TO_SICKBAY, payload: null };
-}
-
-export function requireActiveDiceToSickbay(): Action {
-  return { type: REQUIRE_ACTIVE_DICE_TO_SICKBAY, payload: null };
-}
-
-export function requireActiveToQuarters(): Action {
-  return { type: REQUIRE_ACTIVE_TO_QUARTERS, payload: null };
-}
-
-export function requireTwoCrewToSec(): Action {
-  return { type: REQUIRE_TWO_CREW_TO_SEC, payload: null };
 }

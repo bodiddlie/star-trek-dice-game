@@ -1,14 +1,14 @@
-import { type MissionAction } from './types';
+// import { type MissionAction } from './types';
 import { drawEvent, removeEventFromDeck } from './events';
 import { repairDamage } from './hull';
 import { moveRandomCrewFromQuartersToSickbay, requireActiveDiceToSickbay } from './crew';
 import { activateAndDiscardEvent, dealDamage, dealHullDamage } from './action-helpers';
 
-const DrawEvent: MissionAction = {
-  id: 1,
-  text: 'Draw Event',
-  actionFunc: () => {},
-};
+// const DrawEvent: MissionAction = {
+//   id: 1,
+//   text: 'Draw Event',
+//   actionFunc: () => {},
+// };
 
 export function drawEventAction() {
   return (dispatch, getState) => {

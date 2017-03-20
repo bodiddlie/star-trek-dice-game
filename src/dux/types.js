@@ -6,14 +6,14 @@ import { type EventState } from './events';
 import { type MissionState } from './missions';
 import { type StationState } from './stations';
 
-export type Dispatch = (action: Action | ThunkAction) => any;
-export type GetState = () => Object;
-export type ThunkAction = (dispatch: Dispatch, getStat: GetState) => any;
-
 export type Action = {
   type: string,
   payload: any,
 };
+
+export type GetState = () => Object;
+export type ThunkAction = (dispatch: Function, getState: GetState) => any;
+export type Dispatch = (action: Action | ThunkAction) => any;
 
 export type CrewMember = {
   id: number,
@@ -34,6 +34,12 @@ export type EventCrewSlot = {
   id: number,
 };
 
+export type MissionAction = {
+  id: number,
+  text: string,
+  actionFunc: Function,
+};
+
 export type EventCard = {
   id: number,
   title: string,
@@ -45,12 +51,6 @@ export type EventCard = {
 export type DevelopmentCard = {
   id: number,
   title: string,
-};
-
-export type MissionAction = {
-  id: number,
-  text: string,
-  actionFunc: Function,
 };
 
 export type CrewStation = {

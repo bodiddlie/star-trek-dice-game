@@ -3,6 +3,37 @@ import { type Action, type DevelopmentCard } from './types';
 import { cards } from './development-deck';
 import { clone, shuffle } from './util';
 
+const SHUFFLE_DECK = '[Developments] Shuffle Deck';
+const DRAW_DEVELOPMENT = '[Developments] Draw Development';
+const MAKE_DEVELOPMENT_AVAILABLE = '[Devlopments] Make Development Available';
+const DISCARD_DEVELOPMENT = '[Developments] Discard Development';
+const CLAIM_DEVELOPMENT = '[Developments] Claim Development';
+const CLEAR_DRAWN_DEVELOPMENT = '[Developments] Clear Drawn Development';
+
+export function shuffleDeck(): Action {
+  return { type: SHUFFLE_DECK, payload: null };
+}
+
+export function drawDevelopment(): Action {
+  return { type: DRAW_DEVELOPMENT, payload: null };
+}
+
+export function makeDevelopmentAvailable(development: DevelopmentCard): Action {
+  return { type: MAKE_DEVELOPMENT_AVAILABLE, payload: development };
+}
+
+export function discardDevelopment(development: DevelopmentCard): Action {
+  return { type: DISCARD_DEVELOPMENT, payload: development };
+}
+
+export function claimDevelopment(development: DevelopmentCard): Action {
+  return { type: CLAIM_DEVELOPMENT, payload: development };
+}
+
+export function clearDrawnDevelopment(): Action {
+  return { type: CLEAR_DRAWN_DEVELOPMENT, payload: null };
+}
+
 export type DevelopmentState = {
   deck: Array<DevelopmentCard>,
   drawnDevelopment: ?DevelopmentCard,
@@ -48,35 +79,4 @@ export default function reducer(state: DevelopmentState = initialState, action: 
       return state;
     }
   }
-}
-
-const SHUFFLE_DECK = '[Developments] Shuffle Deck';
-const DRAW_DEVELOPMENT = '[Developments] Draw Development';
-const MAKE_DEVELOPMENT_AVAILABLE = '[Devlopments] Make Development Available';
-const DISCARD_DEVELOPMENT = '[Developments] Discard Development';
-const CLAIM_DEVELOPMENT = '[Developments] Claim Development';
-const CLEAR_DRAWN_DEVELOPMENT = '[Developments] Clear Drawn Development';
-
-export function shuffleDeck(): Action {
-  return { type: SHUFFLE_DECK, payload: null };
-}
-
-export function drawDevelopment(): Action {
-  return { type: DRAW_DEVELOPMENT, payload: null };
-}
-
-export function makeDevelopmentAvailable(development: DevelopmentCard): Action {
-  return { type: MAKE_DEVELOPMENT_AVAILABLE, payload: development };
-}
-
-export function discardDevelopment(development: DevelopmentCard): Action {
-  return { type: DISCARD_DEVELOPMENT, payload: development };
-}
-
-export function claimDevelopment(development: DevelopmentCard): Action {
-  return { type: CLAIM_DEVELOPMENT, payload: development };
-}
-
-export function clearDrawnDevelopment(): Action {
-  return { type: CLEAR_DRAWN_DEVELOPMENT, payload: null };
 }

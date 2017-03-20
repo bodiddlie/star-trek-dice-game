@@ -1,6 +1,17 @@
 // @flow
 import { type Action } from './types';
 
+const TAKE_DAMAGE = '[Hull] Take Damage';
+const REPAIR_DAMAGE = '[Hull] Repair Damage';
+
+export function takeDamage(amount: number): Action {
+  return { type: TAKE_DAMAGE, payload: amount };
+}
+
+export function repairDamage(amount: number): Action {
+  return { type: REPAIR_DAMAGE, payload: amount };
+}
+
 export const initialState: number = 7;
 
 export default function reducer(state: number = initialState, action: Action): number {
@@ -15,15 +26,4 @@ export default function reducer(state: number = initialState, action: Action): n
       return state;
     }
   }
-}
-
-const TAKE_DAMAGE = '[Hull] Take Damage';
-const REPAIR_DAMAGE = '[Hull] Repair Damage';
-
-export function takeDamage(amount: number): Action {
-  return { type: TAKE_DAMAGE, payload: amount };
-}
-
-export function repairDamage(amount: number): Action {
-  return { type: REPAIR_DAMAGE, payload: amount };
 }
