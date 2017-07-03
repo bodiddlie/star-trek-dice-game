@@ -1,24 +1,27 @@
-// @flow
-import { type ThunkAction, type Dispatch, type GetState } from './types';
-import { requireActiveDiceToSickbay, requireActiveToQuarters, moveRandomCrewFromQuartersToSickbay, requireTwoCrewToSec } from './crew';
+import {
+  requireActiveDiceToSickbay,
+  requireActiveToQuarters,
+  moveRandomCrewFromQuartersToSickbay,
+  requireTwoCrewToSec,
+} from './crew';
 import { lowerShields, raiseShields } from './shields';
 import { addCrystal } from './crystals';
 import { dealDamage } from './action-helpers';
 
-export function reportToSickbay(): ThunkAction {
-  return (dispatch: Dispatch) => {
+export function reportToSickbay() {
+  return dispatch => {
     dispatch(requireActiveDiceToSickbay());
   };
 }
 
-export function meteorStrike(): ThunkAction {
-  return (dispatch: Dispatch) => {
+export function meteorStrike() {
+  return dispatch => {
     dispatch(dealDamage(2));
   };
 }
 
-export function loveInterest(): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
+export function loveInterest() {
+  return (dispatch, getState) => {
     const crew = getState().crew.crew;
     const activeCount = crew.filter(c => c.deployed || c.locked).length;
     if (activeCount) {
@@ -29,22 +32,22 @@ export function loveInterest(): ThunkAction {
   };
 }
 
-export function solarFlare(): ThunkAction {
-  return (dispatch: Dispatch) => {
+export function solarFlare() {
+  return dispatch => {
     dispatch(lowerShields());
   };
 }
 
-export function dilithiumDeposits(amount: number): () => ThunkAction {
-  return (): ThunkAction => {
-    return (dispatch: Dispatch) => {
+export function dilithiumDeposits(amount) {
+  return () => {
+    return dispatch => {
       dispatch(addCrystal(amount));
     };
   };
 }
 
-export function redAlert(): ThunkAction {
-  return (dispatch: Dispatch) => {
+export function redAlert() {
+  return dispatch => {
     dispatch(raiseShields());
     dispatch(requireTwoCrewToSec());
   };

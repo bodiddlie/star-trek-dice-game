@@ -1,5 +1,4 @@
-// @flow
-import { type Action, type CrewStation, DiceValues } from './types';
+import { DiceValues } from './types';
 
 const MARK_STATION_FOR_BLOCK = '[Stations] Mark Station For Block';
 
@@ -7,22 +6,18 @@ export const actionTypes = {
   MARK_STATION_FOR_BLOCK,
 };
 
-export function markStationForBlock(diceValue: number): Action {
-  return { type: MARK_STATION_FOR_BLOCK, payload: diceValue };
+export function markStationForBlock(diceValue) {
+  return { type: MARK_STATION_FOR_BLOCK, diceValue };
 }
 
-export type StationState = {
-  stationsToBlock: string[],
-};
-
-export const initialState: StationState = {
+export const initialState = {
   stationsToBlock: [],
 };
 
-export default function reducer(state: StationState, action: Action): StationState {
+export default function reducer(state, action) {
   switch (action.type) {
     case MARK_STATION_FOR_BLOCK: {
-      const stationsToBlock = [...state.stationsToBlock, DiceValues[action.payload]];
+      const stationsToBlock = [...state.stationsToBlock, DiceValues[action.diceValue]];
       return { ...state, stationsToBlock };
     }
     default: {

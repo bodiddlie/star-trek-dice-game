@@ -1,7 +1,4 @@
-// @flow
-import { type EventCard } from './types';
-
-export const cards: Array<EventCard> = [
+export const cards = [
   { id: 1, title: 'Raiders', persistent: true, actions: [], crewSlots: [] },
   { id: 2, title: 'Klingon Battlecruiser', persistent: true, actions: [], crewSlots: [] },
   { id: 3, title: 'Alien Entity', persistent: true, actions: [], crewSlots: [{ id: 0 }, { id: 0 }, { id: 0 }] },

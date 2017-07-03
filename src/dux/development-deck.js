@@ -1,7 +1,4 @@
-// @flow
-import { type DevelopmentCard } from './types';
-
-export const cards: Array<DevelopmentCard> = [
+export const cards = [
   { id: 1, title: 'Development 1' },
   { id: 2, title: 'Development 2' },
   { id: 3, title: 'Development 3' },

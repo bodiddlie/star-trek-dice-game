@@ -1,5 +1,3 @@
-// @flow
-import { type Action, type EventCard } from './types';
 import { cards } from './event-deck';
 import { clone, shuffle } from './util';
 
@@ -21,49 +19,42 @@ export const actionTypes = {
   REMOVE_EVENT_FROM_DECK,
 };
 
-export function shuffleDeck(): Action {
-  return { type: SHUFFLE_DECK, payload: null };
+export function shuffleDeck() {
+  return { type: SHUFFLE_DECK };
 }
 
-export function drawEvent(): Action {
-  return { type: DRAW_EVENT, payload: null };
+export function drawEvent() {
+  return { type: DRAW_EVENT };
 }
 
-export function activateEvent(event: EventCard): Action {
-  return { type: ACTIVATE_EVENT, payload: event };
+export function activateEvent(event) {
+  return { type: ACTIVATE_EVENT, event };
 }
 
-export function discardEvent(event: EventCard): Action {
-  return { type: DISCARD_EVENT, payload: event };
+export function discardEvent(event) {
+  return { type: DISCARD_EVENT, event };
 }
 
-export function clearDrawnEvent(): Action {
-  return { type: CLEAR_DRAWN_EVENT, payload: null };
+export function clearDrawnEvent() {
+  return { type: CLEAR_DRAWN_EVENT };
 }
 
-export function removeActiveEvent(event: EventCard): Action {
-  return { type: REMOVE_ACTIVE_EVENT, payload: event };
+export function removeActiveEvent(event) {
+  return { type: REMOVE_ACTIVE_EVENT, event };
 }
 
-export function removeEventFromDeck(event: EventCard): Action {
-  return { type: REMOVE_EVENT_FROM_DECK, payload: event };
+export function removeEventFromDeck(event) {
+  return { type: REMOVE_EVENT_FROM_DECK, event };
 }
 
-export type EventState = {
-  deck: Array<EventCard>,
-  drawnEvent: ?EventCard,
-  activeEvents: Array<EventCard>,
-  discardedEvents: Array<EventCard>,
-};
-
-export const initialState: EventState = {
+export const initialState = {
   deck: clone(cards),
   drawnEvent: null,
   activeEvents: [],
   discardedEvents: [],
 };
 
-export default function reducer(state: EventState = initialState, action: Action): EventState {
+export default function reducer(state = initialState, action) {
   switch (action.type) {
     case SHUFFLE_DECK: {
       return { ...state, deck: shuffle(state.deck) };
@@ -74,22 +65,22 @@ export default function reducer(state: EventState = initialState, action: Action
       return { ...state, deck, drawnEvent };
     }
     case ACTIVATE_EVENT: {
-      const activeEvents = [...state.activeEvents, action.payload];
+      const activeEvents = [...state.activeEvents, action.event];
       return { ...state, activeEvents };
     }
     case DISCARD_EVENT: {
-      const discardedEvents = [...state.discardedEvents, action.payload];
+      const discardedEvents = [...state.discardedEvents, action.event];
       return { ...state, discardedEvents };
     }
     case CLEAR_DRAWN_EVENT: {
       return { ...state, drawnEvent: null };
     }
     case REMOVE_ACTIVE_EVENT: {
-      const activeEvents = state.activeEvents.filter(e => e.id !== action.payload.id);
+      const activeEvents = state.activeEvents.filter(e => e.id !== action.event.id);
       return { ...state, activeEvents };
     }
     case REMOVE_EVENT_FROM_DECK: {
-      const deck = state.deck.filter(e => e.id !== action.payload.id);
+      const deck = state.deck.filter(e => e.id !== action.event.id);
       return { ...state, deck };
     }
     default: {

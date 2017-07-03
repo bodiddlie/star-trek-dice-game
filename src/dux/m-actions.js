@@ -1,4 +1,3 @@
-// import { type MissionAction } from './types';
 import { drawEvent, removeEventFromDeck } from './events';
 import { repairDamage } from './hull';
 import { moveRandomCrewFromQuartersToSickbay, requireActiveDiceToSickbay } from './crew';

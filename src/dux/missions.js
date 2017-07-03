@@ -1,5 +1,3 @@
-// @flow
-import { type Action, type MissionCard } from './types';
 import { cards } from './mission-deck';
 import { clone, shuffle } from './util';
 
@@ -8,30 +6,23 @@ const DRAW_MISSION_CARD = '[Mission] Draw Mission Card';
 const FAIL_MISSION = '[Mission] Fail Mission';
 const COMPLETE_MISSION = '[Mission] Complete Mission';
 
-export function shuffleDeck(): Action {
-  return { type: SHUFFLE_DECK, payload: null };
+export function shuffleDeck() {
+  return { type: SHUFFLE_DECK };
 }
 
-export function drawMissionCard(): Action {
-  return { type: DRAW_MISSION_CARD, payload: null };
+export function drawMissionCard() {
+  return { type: DRAW_MISSION_CARD };
 }
 
-export function failMission(): Action {
-  return { type: FAIL_MISSION, payload: null };
+export function failMission() {
+  return { type: FAIL_MISSION };
 }
 
-export function completeMission(): Action {
-  return { type: COMPLETE_MISSION, payload: null };
+export function completeMission() {
+  return { type: COMPLETE_MISSION };
 }
 
-export type MissionState = {
-  deck: Array<MissionCard>,
-  activeMission: ?MissionCard,
-  failedMissions: Array<MissionCard>,
-  completedMissions: Array<MissionCard>,
-};
-
-export const initialState: MissionState = {
+export const initialState = {
   deck: clone(cards),
   activeMission: null,
   failedMissions: [],
@@ -39,7 +30,7 @@ export const initialState: MissionState = {
   drawnMission: null,
 };
 
-export default function reducer(state: MissionState = initialState, action: Action): MissionState {
+export default function reducer(state = initialState, action) {
   switch (action.type) {
     case SHUFFLE_DECK: {
       return { ...state, deck: shuffle(state.deck) };

@@ -1,12 +1,10 @@
-// @flow
-import { type ThunkAction, type Dispatch, type GetState, type EventCard } from './types';
 import { activateEvent, removeActiveEvent, discardEvent } from './events';
 import * as hull from './hull';
 import * as shields from './shields';
 import * as crew from './crew';
 
-export function activateAndDiscardEvent(event: EventCard): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
+export function activateAndDiscardEvent(event) {
+  return (dispatch, getState) => {
     if (getState().events.activeEvents.length === 9) {
       dispatch(discardRandomEvent());
     }
@@ -14,17 +12,17 @@ export function activateAndDiscardEvent(event: EventCard): ThunkAction {
   };
 }
 
-export function discardRandomEvent(): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
-    const randomIndex: number = Math.floor(Math.random() * 9);
-    const discarded: EventCard = getState().events.activeEvents[randomIndex];
+export function discardRandomEvent() {
+  return (dispatch, getState) => {
+    const randomIndex = Math.floor(Math.random() * 9);
+    const discarded = getState().events.activeEvents[randomIndex];
     dispatch(removeActiveEvent(discarded));
     dispatch(discardEvent(discarded));
   };
 }
 
-export function dealDamage(amount: number): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
+export function dealDamage(amount) {
+  return (dispatch, getState) => {
     let remaining = amount;
     const shieldsLeft = getState().shields;
     if (shieldsLeft) {
@@ -48,12 +46,12 @@ export function dealDamage(amount: number): ThunkAction {
   };
 }
 
-export function dealHullDamage(amount: number): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
-    let remaining: number = amount;
-    const hullLeft: number = getState().hull;
+export function dealHullDamage(amount) {
+  return (dispatch, getState) => {
+    let remaining = amount;
+    const hullLeft = getState().hull;
     if (hullLeft) {
-      const hullDamage: number = remaining > hullLeft ? hullLeft : remaining;
+      const hullDamage = remaining > hullLeft ? hullLeft : remaining;
       remaining -= hullDamage;
       dispatch(hull.takeDamage(hullDamage));
     }

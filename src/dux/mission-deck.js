@@ -1,7 +1,4 @@
-// @flow
-import { type MissionCard } from './types';
-
-export const cards: Array<MissionCard> = [
+export const cards = [
   { id: 1, title: 'Avert Diplomatic Crisis', currentStage: 0 },
   { id: 2, title: 'Deliver Emergency Medical Supplies', currentStage: 0 },
   { id: 3, title: 'Investigate Deep Space Distress Beacon', currentStage: 0 },
