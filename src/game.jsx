@@ -3,45 +3,48 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { Modal } from './modal';
-import { missionActions, eventActions, developmentActions } from './dux';
+import { tryChooseDifficulty } from './sagas/game-start';
 
-class Game extends React.Component {
-  state = {
-    showStartModal: true,
-  };
-  onStartModalClose = () => {
-    this.props.shuffleDecks();
-    this.setState({ showStartModal: false });
-  };
-  render() {
-    const { showStartModal } = this.state;
-    const { events, missions, developments } = this.props;
+const Game = props => {
+  const { events, missions, developments, showDifficulty, chooseDifficulty } = props;
 
-    return (
-      <Container>
-        {showStartModal && <h3>Waiting on you...</h3>}
-        {!showStartModal &&
-          <DeckGrid>
-            <Deck>
-              {events.map(e => <span key={e.id}>{e.title}</span>)}
-            </Deck>
-            <Deck>
-              {missions.map(m => <span key={m.id}>{m.title}</span>)}
-            </Deck>
-            <Deck>
-              {developments.map(d => <span key={d.id}>{d.title}</span>)}
-            </Deck>
-          </DeckGrid>}
-        <Modal show={showStartModal}>
-          <button type="button" onClick={this.onStartModalClose}>Start Game!</button>
-        </Modal>
-      </Container>
-    );
-  }
-}
+  return (
+    <Container>
+      {showDifficulty && <h3>Waiting on you...</h3>}
+      {!showDifficulty &&
+        <DeckGrid>
+          <Deck>
+            {events.map(e =>
+              <span key={e.id}>
+                {e.title}
+              </span>
+            )}
+          </Deck>
+          <Deck>
+            {missions.map(m =>
+              <span key={m.id}>
+                {m.title}
+              </span>
+            )}
+          </Deck>
+          <Deck>
+            {developments.map(d =>
+              <span key={d.id}>
+                {d.title}
+              </span>
+            )}
+          </Deck>
+        </DeckGrid>}
+      <Modal show={showDifficulty}>
+        <button type="button" onClick={() => chooseDifficulty(1)}>
+          Start Game!
+        </button>
+      </Modal>
+    </Container>
+  );
+};
 
-const Container = styled.div`
-`;
+const Container = styled.div``;
 
 const DeckGrid = styled.div`
   display: flex;
@@ -58,17 +61,26 @@ const mapStateToProps = state => {
     events: state.events.deck,
     developments: state.developments.deck,
     missions: state.missions.deck,
+    showDifficulty: state.gameState === 0,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    shuffleDecks: () => {
-      dispatch(eventActions.shuffleDeck());
-      dispatch(missionActions.shuffleDeck());
-      dispatch(developmentActions.shuffleDeck());
+    chooseDifficulty: difficulty => {
+      dispatch(tryChooseDifficulty(difficulty));
     },
   };
 };
+
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     shuffleDecks: () => {
+//       dispatch(eventActions.shuffleDeck());
+//       dispatch(missionActions.shuffleDeck());
+//       dispatch(developmentActions.shuffleDeck());
+//     },
+//   };
+// };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);

@@ -2,14 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
 
 import App from './App';
 import './index.css';
 
 import gameState from './dux';
+import { watchChooseDifficulty } from './sagas/game-start';
 
-let store = createStore(gameState, applyMiddleware(thunk));
+const saga = createSagaMiddleware();
+let store = createStore(gameState, applyMiddleware(saga));
+saga.run(watchChooseDifficulty);
 
 ReactDOM.render(
   <Provider store={store}>
