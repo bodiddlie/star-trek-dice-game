@@ -1,7 +1,8 @@
-import { put, takeEvery } from 'redux-saga/effects';
+import { put, takeEvery, call } from 'redux-saga/effects';
 
 import { setDifficulty } from '../dux/game-state';
 import { eventActions, missionActions, developmentActions } from '../dux';
+import { startDevelopments } from './developments';
 
 //----------------------------------
 // ACTIONS
@@ -21,6 +22,7 @@ export function* chooseDifficulty(action) {
   yield put(eventActions.shuffleDeck());
   yield put(missionActions.shuffleDeck());
   yield put(developmentActions.shuffleDeck());
+  yield call(startDevelopments);
 }
 
 export function* watchChooseDifficulty() {

@@ -4,40 +4,49 @@ import styled from 'styled-components';
 
 import { Modal } from './modal';
 import { tryChooseDifficulty } from './sagas/game-start';
+import Developments from './components/developments';
 
 const Game = props => {
   const { events, missions, developments, showDifficulty, chooseDifficulty } = props;
 
   return (
     <Container>
-      {showDifficulty && <h3>Waiting on you...</h3>}
-      {!showDifficulty &&
-        <DeckGrid>
-          <Deck>
-            {events.map(e =>
-              <span key={e.id}>
-                {e.title}
-              </span>
-            )}
-          </Deck>
-          <Deck>
-            {missions.map(m =>
-              <span key={m.id}>
-                {m.title}
-              </span>
-            )}
-          </Deck>
-          <Deck>
-            {developments.map(d =>
-              <span key={d.id}>
-                {d.title}
-              </span>
-            )}
-          </Deck>
-        </DeckGrid>}
+      <DeckGrid>
+        <Deck>
+          {events.map(e =>
+            <span key={e.id}>
+              {e.title}
+            </span>
+          )}
+        </Deck>
+        <Deck>
+          {missions.map(m =>
+            <span key={m.id}>
+              {m.title}
+            </span>
+          )}
+        </Deck>
+        <Deck>
+          {developments.map(d =>
+            <span key={d.id}>
+              {d.title}
+            </span>
+          )}
+        </Deck>
+      </DeckGrid>
+      <Developments />
       <Modal show={showDifficulty}>
         <button type="button" onClick={() => chooseDifficulty(1)}>
-          Start Game!
+          Easy
+        </button>
+        <button type="button" onClick={() => chooseDifficulty(2)}>
+          Medium
+        </button>
+        <button type="button" onClick={() => chooseDifficulty(3)}>
+          Hard
+        </button>
+        <button type="button" onClick={() => chooseDifficulty(4)}>
+          Kobayashi Maru
         </button>
       </Modal>
     </Container>

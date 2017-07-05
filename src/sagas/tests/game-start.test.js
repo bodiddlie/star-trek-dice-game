@@ -1,8 +1,9 @@
-import { put } from 'redux-saga/effects';
+import { put, call } from 'redux-saga/effects';
 
 import { chooseDifficulty } from '../game-start';
 import { setDifficulty } from '../../dux/game-state';
 import { eventActions, missionActions, developmentActions } from '../../dux';
+import { startDevelopments } from '../developments';
 
 describe('Game Start Saga', () => {
   it('will set the state for asking for difficulty level', () => {
@@ -15,5 +16,9 @@ describe('Game Start Saga', () => {
     expect(result.value).toEqual(put(missionActions.shuffleDeck()));
     result = gen.next();
     expect(result.value).toEqual(put(developmentActions.shuffleDeck()));
+    result = gen.next();
+    expect(result.value).toEqual(call(startDevelopments));
+    result = gen.next();
+    expect(result.done).toBeTruthy();
   });
 });
