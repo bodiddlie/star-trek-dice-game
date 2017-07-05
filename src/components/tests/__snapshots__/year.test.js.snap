@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Year /> renders the current year track value 1`] = `
+<div>
+  Year - 
+  2
+</div>
+`;

@@ -1,6 +1,6 @@
-import reducer, { setDifficulty } from '../game-state';
+import reducer, { setDifficulty } from '../difficulty';
 
-describe('Game State Reducer', () => {
+describe('Difficulty Reducer', () => {
   it('difficulty starts at 0', () => {
     const result = reducer(undefined, {});
     expect(result).toBe(0);

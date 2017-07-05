@@ -1,4 +1,4 @@
-import reducer, { depleteCrystals, resetCrystals, addCrystal } from '../crystals';
+import reducer, { depleteCrystals, resetCrystals, addCrystal, setCrystals } from '../crystals';
 
 describe('Dilithium Crystals Reducer', () => {
   it('depletes one crystal', () => {
@@ -24,5 +24,10 @@ describe('Dilithium Crystals Reducer', () => {
   it('can not add past 10', () => {
     const result = reducer(1, addCrystal(10));
     expect(result).toBe(10);
+  });
+
+  it('can set the value of the crystal', () => {
+    const result = reducer(1, setCrystals(7));
+    expect(result).toBe(7);
   });
 });

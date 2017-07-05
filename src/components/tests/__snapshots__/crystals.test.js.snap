@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Crystals /> should render the dilithium crystal value 1`] = `
+<div>
+  4
+</div>
+`;

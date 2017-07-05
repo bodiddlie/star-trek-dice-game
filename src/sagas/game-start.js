@@ -1,6 +1,7 @@
 import { put, takeEvery, call } from 'redux-saga/effects';
 
-import { setDifficulty } from '../dux/game-state';
+import { setDifficulty } from '../dux/difficulty';
+import { setCrystals } from '../dux/crystals';
 import { eventActions, missionActions, developmentActions } from '../dux';
 import { startDevelopments } from './developments';
 
@@ -19,10 +20,15 @@ export function tryChooseDifficulty(difficulty) {
 export function* chooseDifficulty(action) {
   const { difficulty } = action;
   yield put(setDifficulty(difficulty));
+  yield put(setCrystals(10 - (difficulty - 1)));
+  yield call(shuffleDecks);
+  yield call(startDevelopments);
+}
+
+export function* shuffleDecks() {
   yield put(eventActions.shuffleDeck());
   yield put(missionActions.shuffleDeck());
   yield put(developmentActions.shuffleDeck());
-  yield call(startDevelopments);
 }
 
 export function* watchChooseDifficulty() {
@@ -32,7 +38,3 @@ export function* watchChooseDifficulty() {
 //----------------------------------
 // SELECTORS
 //----------------------------------
-// export const selectors = {
-//   room: state => state.room,
-//   player: state => state.player,
-// };

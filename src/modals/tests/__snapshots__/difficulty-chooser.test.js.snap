@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Difficulty Chooser /> renders a modal for choosing the difficulty 1`] = `
+<Component
+  show={true}
+>
+  <button
+    onClick={[Function]}
+    type="button"
+  >
+    Easy
+  </button>
+  <button
+    onClick={[Function]}
+    type="button"
+  >
+    Medium
+  </button>
+  <button
+    onClick={[Function]}
+    type="button"
+  >
+    Hard
+  </button>
+  <button
+    onClick={[Function]}
+    type="button"
+  >
+    Kobayashi Maru
+  </button>
+</Component>
+`;

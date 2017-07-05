@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-const Developments = props => {
+export const Developments = props => {
   const { developments } = props;
 
   return (

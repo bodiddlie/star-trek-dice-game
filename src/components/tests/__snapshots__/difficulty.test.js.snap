@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Difficulty /> renders the chosen difficulty 1`] = `
+<div>
+  2
+</div>
+`;

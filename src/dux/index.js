@@ -7,7 +7,7 @@ import developments, * as developmentActions from './developments';
 import hull from './hull';
 import shields from './shields';
 import year from './year';
-import gameState from './game-state';
+import difficulty from './difficulty';
 
 const state = combineReducers({
   missions,
@@ -17,7 +17,7 @@ const state = combineReducers({
   hull,
   shields,
   year,
-  gameState,
+  difficulty,
 });
 
 export default state;

@@ -2,12 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { Modal } from './modal';
-import { tryChooseDifficulty } from './sagas/game-start';
-import Developments from './components/developments';
+import { Developments, Hull, Shields, Crystals, Year, Difficulty } from './components';
+import { DifficultyChooser } from './modals';
 
 const Game = props => {
-  const { events, missions, developments, showDifficulty, chooseDifficulty } = props;
+  const { events, missions, developments } = props;
 
   return (
     <Container>
@@ -35,20 +34,12 @@ const Game = props => {
         </Deck>
       </DeckGrid>
       <Developments />
-      <Modal show={showDifficulty}>
-        <button type="button" onClick={() => chooseDifficulty(1)}>
-          Easy
-        </button>
-        <button type="button" onClick={() => chooseDifficulty(2)}>
-          Medium
-        </button>
-        <button type="button" onClick={() => chooseDifficulty(3)}>
-          Hard
-        </button>
-        <button type="button" onClick={() => chooseDifficulty(4)}>
-          Kobayashi Maru
-        </button>
-      </Modal>
+      <Hull />
+      <Shields />
+      <Crystals />
+      <Year />
+      <Difficulty />
+      <DifficultyChooser />
     </Container>
   );
 };
@@ -70,26 +61,7 @@ const mapStateToProps = state => {
     events: state.events.deck,
     developments: state.developments.deck,
     missions: state.missions.deck,
-    showDifficulty: state.gameState === 0,
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    chooseDifficulty: difficulty => {
-      dispatch(tryChooseDifficulty(difficulty));
-    },
-  };
-};
-
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     shuffleDecks: () => {
-//       dispatch(eventActions.shuffleDeck());
-//       dispatch(missionActions.shuffleDeck());
-//       dispatch(developmentActions.shuffleDeck());
-//     },
-//   };
-// };
-
-export default connect(mapStateToProps, mapDispatchToProps)(Game);
+export default connect(mapStateToProps)(Game);

@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Developments /> should render a lits of developments 1`] = `
+<div>
+  <span>
+    dev 1
+  </span>
+  <span>
+    dev 2
+  </span>
+</div>
+`;
+
+exports[`<Developments /> should render an empty div with no developments 1`] = `<div />`;
