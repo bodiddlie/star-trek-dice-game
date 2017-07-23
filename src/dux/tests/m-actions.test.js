@@ -1,7 +1,9 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { put, select, call } from 'redux-saga/effects';
 
 import * as mact from '../m-actions';
+import * as helpers from '../action-helpers';
 import * as fromEvents from '../events';
 import * as eventDeck from '../event-deck';
 import * as fromHull from '../hull';
@@ -11,6 +13,10 @@ import * as fromMissions from '../missions';
 import * as fromCrystals from '../crystals';
 import { clone } from '../util';
 
+const mockMath = Object.create(global.Math);
+mockMath.random = () => 0.5;
+global.Math = mockMath;
+
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
@@ -18,94 +24,179 @@ const baseState = {
   missions: fromMissions.initialState,
   crystals: fromCrystals.initialState,
   events: fromEvents.initialState,
-  shields: fromShields.initialState,
+  shields: fromShields.initialtate,
   hull: fromHull.initialState,
   crew: fromCrew.initialState,
 };
 
-describe('Mission Action Thunks', () => {
+describe('M-Actions', () => {
+  describe('Draw Event', () => {
+    let gen;
+    let result;
+
+    beforeEach(() => {
+      gen = mact.drawEventAction();
+      result = gen.next();
+      expect(result.value).toEqual(put(fromEvents.drawEvent()));
+      result = gen.next();
+      expect(result.value).toEqual(select(mact.selectors.activeEvents));
+    });
+
+    it('will draw a new event and activate it', () => {
+      result = gen.next([]);
+      expect(result.value).toEqual(select(mact.selectors.drawnEvent));
+      result = gen.next('test');
+      expect(result.value).toEqual(put(fromEvents.activateEvent('test')));
+      result = gen.next();
+      expect(result.done).toBeTruthy();
+    });
+
+    it('will discard a random event if there are already 9 active', () => {
+      result = gen.next([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+      expect(result.value).toEqual(put(fromEvents.removeActiveEvent(4)));
+      result = gen.next();
+      expect(result.value).toEqual(put(fromEvents.discardEvent(4)));
+      result = gen.next();
+      expect(result.value).toEqual(select(mact.selectors.drawnEvent));
+      result = gen.next('test');
+      expect(result.value).toEqual(put(fromEvents.activateEvent('test')));
+      result = gen.next();
+      expect(result.done).toBeTruthy();
+    });
+  });
+
+  describe('Deliver Emergency Supplies', () => {
+    let gen;
+    let result;
+
+    beforeEach(() => {
+      gen = mact.deliverEmergencySupplies();
+      result = gen.next();
+      expect(result.value).toEqual(call(mact.drawEventAction));
+      result = gen.next();
+      expect(result.value).toEqual(select(mact.selectors.sickbay));
+    });
+
+    it('will do nothing if any crew already in sickbay', () => {
+      result = gen.next(['test']);
+      expect(result.done).toBeTruthy();
+    });
+
+    it('will move one crew to sickbay if sickbay is empty', () => {
+      result = gen.next([]);
+      expect(result.value).toEqual(
+        put(fromCrew.moveRandomCrewFromQuartersToSickbay)
+      );
+      result = gen.next();
+      expect(result.done).toBeTruthy();
+    });
+  });
+
+  describe('Investigate Spatial Anomaly', () => {
+    it('will deal two damage to hull if on stage 1', () => {
+      const gen = mact.investigateSpatialAnomaly();
+      let result = gen.next();
+      expect(result.value).toEqual(select(mact.selectors.missionStage));
+      result = gen.next(1);
+      expect(result.value).toEqual(call(helpers.dealDamage, 2));
+    });
+
+    it('will draw an event if stage 1 is complete', () => {
+      const gen = mact.investigateSpatialAnomaly();
+      let result = gen.next();
+      expect(result.value).toEqual(select(mact.selectors.missionStage));
+      result = gen.next(2);
+      expect(result.value).toEqual(call(mact.drawEventAction));
+    });
+  });
+
+  describe('Deal 1 Damage', () => {
+    const gen = mact.dealOneDamage();
+    let result = gen.next();
+    expect(result.value).toEqual(call(helpers.dealDamage, 1));
+  });
+
+  describe('Deal 2 Damage', () => {
+    const gen = mact.dealTwoDamage();
+    let result = gen.next();
+    expect(result.value).toEqual(call(helpers.dealDamage, 2));
+  });
+
+  describe('Escort Colonist Vessel', () => {
+    let gen;
+    let result;
+
+    beforeEach(() => {
+      gen = mact.escortColonistVessel();
+      result = gen.next();
+      expect(result.value).toEqual(select(mact.selectors.eventDeck));
+    });
+
+    describe('Raiders', () => {
+      const card = { title: 'Raiders' };
+      afterEach(() => {
+        expect(result.value).toEqual(put(fromEvents.removeEventFromDeck(card)));
+        result = gen.next();
+        expect(result.value).toEqual(
+          call(helpers.activateAndDiscardEvent, card)
+        );
+      });
+
+      it('will search the event deck for a raiders card and activate it', () => {
+        result = gen.next([card]);
+      });
+
+      it('will search the discard pile for a raiders card if not in the deck', () => {
+        result = gen.next([]);
+        expect(result.value).toEqual(select(mact.selectors.discardedEvents));
+        result = gen.next([card]);
+      });
+    });
+
+    describe('Klingon BattleCruiser', () => {
+      const card = { title: 'Klingon Battlecruiser' };
+
+      afterEach(() => {
+        expect(result.value).toEqual(put(fromEvents.removeEventFromDeck(card)));
+        result = gen.next();
+        expect(result.value).toEqual(
+          call(helpers.activateAndDiscardEvent, card)
+        );
+      });
+
+      it('will search the event deck for a klingon battlecruiser card if raiders are all active', () => {
+        result = gen.next([card]);
+        expect(result.value).toEqual(select(mact.selectors.discardedEvents));
+        result = gen.next([]);
+      });
+
+      it('will search the discard pile for a klingon battlecruiser if not in the deck', () => {
+        result = gen.next([]);
+        expect(result.value).toEqual(select(mact.selectors.discardedEvents));
+        result = gen.next([card]);
+        expect(result.value).toEqual(select(mact.selectors.discardedEvents));
+        result = gen.next([card]);
+      });
+    });
+
+    it('will do nothing if all raiders and battlecruisers are active', () => {
+      result = gen.next([]);
+      expect(result.value).toEqual(select(mact.selectors.discardedEvents));
+      result = gen.next([]);
+      expect(result.value).toEqual(select(mact.selectors.discardedEvents));
+      result = gen.next([]);
+      expect(result.done).toBeTruthy();
+    });
+  });
+});
+
+xdescribe('Mission Action Thunks', () => {
   let store;
   let initialState;
 
   beforeEach(() => {
     initialState = clone(baseState);
     store = mockStore(initialState);
-  });
-
-  describe('Draw Event', () => {
-    it('will draw a new event and activate it', () => {
-      initialState.events.drawnEvent = eventDeck.cards[0];
-      store.dispatch(mact.drawEventAction());
-      const actions = store.getActions();
-      expect(actions[0]).toEqual(fromEvents.drawEvent());
-      expect(actions).toHaveLength(2);
-    });
-
-    it('will discard a random event if there are already 9 active', () => {
-      initialState.events.drawnEvent = eventDeck.cards[0];
-      initialState.events.activeEvents = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-      store.dispatch(mact.drawEventAction());
-      const actions = store.getActions();
-      expect(actions[0]).toEqual(fromEvents.drawEvent());
-      expect(actions).toHaveLength(4);
-    });
-  });
-
-  describe('Escort Colonist Vessel', () => {
-    //this is one of the more complicated actions
-
-    it('will search the event deck for a raiders card and activate it', () => {
-      store.dispatch(mact.raidersOrBattlecruiser());
-      const actions = store.getActions();
-      expect(actions[0]).toEqual(fromEvents.removeEventFromDeck(eventDeck.cards[0]));
-      expect(actions[1]).toEqual(fromEvents.activateEvent(eventDeck.cards[0]));
-    });
-
-    it('will search the discard pile for a raiders card if not in the deck', () => {
-      initialState.events.discardedEvents = [eventDeck.cards[0]];
-      initialState.events.deck = [...initialState.events.deck.slice(1)];
-      store.dispatch(mact.raidersOrBattlecruiser());
-      const actions = store.getActions();
-      expect(actions[0]).toEqual(fromEvents.removeEventFromDeck(eventDeck.cards[0]));
-      expect(actions[1]).toEqual(fromEvents.activateEvent(eventDeck.cards[0]));
-    });
-
-    it('will search the event deck for a klingon battlecruiser card if raiders are all active', () => {
-      initialState.events.activeEvents = [eventDeck.cards[0]];
-      initialState.events.deck = [...initialState.events.deck.slice(1)];
-      store.dispatch(mact.raidersOrBattlecruiser());
-      const actions = store.getActions();
-      expect(actions[0]).toEqual(fromEvents.removeEventFromDeck(eventDeck.cards[1]));
-      expect(actions[1]).toEqual(fromEvents.activateEvent(eventDeck.cards[1]));
-    });
-
-    it('will search the discard pile for a klingon battlecruiser if not in the deck', () => {
-      initialState.events.activeEvents = [eventDeck.cards[0]];
-      initialState.events.discardedEvents = [eventDeck.cards[1]];
-      initialState.events.deck = [...initialState.events.deck.slice(2)];
-      store.dispatch(mact.raidersOrBattlecruiser());
-      const actions = store.getActions();
-      expect(actions[0]).toEqual(fromEvents.removeEventFromDeck(eventDeck.cards[1]));
-      expect(actions[1]).toEqual(fromEvents.activateEvent(eventDeck.cards[1]));
-    });
-
-    it('will do nothing if all raiders and battlecruisers are active', () => {
-      initialState.events.activeEvents = [eventDeck.cards[0], eventDeck.cards[1]];
-      initialState.events.deck = [...initialState.events.deck.slice(2)];
-      store.dispatch(mact.raidersOrBattlecruiser());
-      const actions = store.getActions();
-      expect(actions).toHaveLength(0);
-    });
-
-    it('will discard a random event if there are already 9 active', () => {
-      initialState.events.activeEvents = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-      store.dispatch(mact.raidersOrBattlecruiser());
-      const actions = store.getActions();
-      expect(actions[0]).toEqual(fromEvents.removeEventFromDeck(eventDeck.cards[0]));
-      expect(actions[1].type).toEqual(fromEvents.actionTypes.REMOVE_ACTIVE_EVENT);
-      expect(actions[2].type).toEqual(fromEvents.actionTypes.DISCARD_EVENT);
-      expect(actions[3]).toEqual(fromEvents.activateEvent(eventDeck.cards[0]));
-    });
   });
 
   describe('Draw 2 Events', () => {
@@ -126,68 +217,6 @@ describe('Mission Action Thunks', () => {
       const actions = store.getActions();
       expect(actions[0]).toEqual(fromHull.repairDamage(1));
       expect(actions).toHaveLength(1);
-    });
-  });
-
-  describe('Deal One Damage', () => {
-    it('will deal damage using the helper', () => {
-      store.dispatch(mact.dealOneDamage());
-      const actions = store.getActions();
-      expect(actions[0]).toEqual(fromHull.takeDamage(1));
-    });
-
-    it('will deal damage in the proper order', () => {
-      initialState.shields = 5;
-      store.dispatch(mact.dealOneDamage());
-      const actions = store.getActions();
-      expect(actions[0]).toEqual(fromShields.takeDamage(1));
-    });
-  });
-
-  describe('Deal Two Damage', () => {
-    it('will deal damage using the helper', () => {
-      store.dispatch(mact.dealTwoDamage());
-      const actions = store.getActions();
-      expect(actions[0]).toEqual(fromHull.takeDamage(2));
-    });
-
-    it('will deal damage in the proper order', () => {
-      initialState.shields = 5;
-      store.dispatch(mact.dealTwoDamage());
-      const actions = store.getActions();
-      expect(actions[0]).toEqual(fromShields.takeDamage(2));
-    });
-  });
-
-  describe('Investiage Spatial Anomaly', () => {
-    it('will deal two damage if stage one is incomplete', () => {
-      initialState.missions.activeMission = { currentStage: 1 };
-      store.dispatch(mact.investigateSpatialAnomaly());
-      const actions = store.getActions();
-      expect(actions[0]).toEqual(fromHull.takeDamage(2));
-    });
-
-    it('will draw an event if stage one is complete', () => {
-      initialState.missions.activeMission = { currentStage: 2 };
-      store.dispatch(mact.investigateSpatialAnomaly());
-      const actions = store.getActions();
-      expect(actions[0]).toEqual(fromEvents.drawEvent());
-      expect(actions).toHaveLength(2);
-    });
-  });
-
-  describe('If Sickbay empty move 1 crew from quarters to sickbay', () => {
-    it('will move one crew to sickbay if sickbay is empty', () => {
-      store.dispatch(mact.emptySickbayMove());
-      const actions = store.getActions();
-      expect(actions[0]).toEqual(fromCrew.moveRandomCrewFromQuartersToSickbay());
-    });
-
-    it('will not move a crew if any are in sickbay', () => {
-      initialState.crew.crew[0].sickbay = true;
-      store.dispatch(mact.emptySickbayMove());
-      const actions = store.getActions();
-      expect(actions).toHaveLength(0);
     });
   });
 
@@ -225,14 +254,18 @@ describe('Mission Action Thunks', () => {
     });
 
     it('does no damage if no SEC are locked on it', () => {
-      initialState.events.activeEvents = [eventDeck.cards.find(e => e.title === 'Alien Entity')];
+      initialState.events.activeEvents = [
+        eventDeck.cards.find(e => e.title === 'Alien Entity'),
+      ];
       store.dispatch(mact.alienEntity());
       const actions = store.getActions();
       expect(actions).toHaveLength(0);
     });
 
     it('does one damage if one SEC is locked in', () => {
-      initialState.events.activeEvents = [eventDeck.cards.find(e => e.title === 'Alien Entity')];
+      initialState.events.activeEvents = [
+        eventDeck.cards.find(e => e.title === 'Alien Entity'),
+      ];
       initialState.events.activeEvents[0].crewSlots[0].id = 1;
       store.dispatch(mact.alienEntity());
       const actions = store.getActions();
@@ -240,7 +273,9 @@ describe('Mission Action Thunks', () => {
     });
 
     it('does two damage if two SEC are locked in', () => {
-      initialState.events.activeEvents = [eventDeck.cards.find(e => e.title === 'Alien Entity')];
+      initialState.events.activeEvents = [
+        eventDeck.cards.find(e => e.title === 'Alien Entity'),
+      ];
       initialState.events.activeEvents[0].crewSlots[0].id = 1;
       initialState.events.activeEvents[0].crewSlots[1].id = 1;
       store.dispatch(mact.alienEntity());
@@ -249,7 +284,9 @@ describe('Mission Action Thunks', () => {
     });
 
     it('does three damage if three SEC are locked in', () => {
-      initialState.events.activeEvents = [eventDeck.cards.find(e => e.title === 'Alien Entity')];
+      initialState.events.activeEvents = [
+        eventDeck.cards.find(e => e.title === 'Alien Entity'),
+      ];
       initialState.events.activeEvents[0].crewSlots[0].id = 1;
       initialState.events.activeEvents[0].crewSlots[1].id = 1;
       initialState.events.activeEvents[0].crewSlots[2].id = 1;
